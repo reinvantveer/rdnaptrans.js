@@ -1,11 +1,4 @@
-*/.classpath
-.project
-*/.project
-.settings/*
-*/.settings/
-target/
-/.settings
-nb-configuration.xml
-.idea/
-*.iml
-*.asc
+
+.idea
+rdnaptrans.js.iml
+/node_modules/

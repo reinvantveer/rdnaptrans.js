@@ -1,0 +1,37 @@
+{
+  "name": "rdnaptrans.js",
+  "version": "0.1.0",
+  "description": "JavaScript implementation of RDNAPTRANS, for the projection of RD geometries (EPSG:28992) to ETRS89 (EPSG:4258) and vice versa",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "mocha --recursive -R spec --bail --check-leaks",
+    "cover": "istanbul cover _mocha -- --recursive -R spec --bail --check-leaks src/test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reinvantveer/rdnaptrans.js.git"
+  },
+  "keywords": [
+    "reproject",
+    "projection",
+    "ETRS89",
+    "RD",
+    "EPSG:28992",
+    "EPSG:4258"
+  ],
+  "author": "Rein van 't Veer",
+  "license": "SEE LICENSE IN 'LICENSE.txt'",
+  "bugs": {
+    "url": "https://github.com/reinvantveer/rdnaptrans.js/issues"
+  },
+  "homepage": "https://github.com/reinvantveer/rdnaptrans.js#readme",
+  "dependencies": {
+    "co": "^4.6.0",
+    "xtend": "^4.0.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "mocha": "^3.2.0"
+  }
+}
