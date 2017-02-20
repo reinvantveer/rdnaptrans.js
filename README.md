@@ -61,6 +61,7 @@ The module is built and tested for Node and browser on Travis. However, you can 
 
 # Future
 TODO:
+- [ ] Fix grid file reloading bug
 - [ ] Create geoJSON convenience functions
 - [ ] Create toFixed() convenience functions
 - [ ] Create convenience properties or functions for lat, lon, z on Geographic class
