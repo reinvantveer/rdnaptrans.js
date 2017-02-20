@@ -5,9 +5,9 @@
 
 'use strict';
 
-const Transform = require('../../index').Transform;
-const Geographic = require('../../index').Geographic;
-const Cartesian = require('../../index').Cartesian;
+const Transform = require('../../rdnaptrans').Transform;
+const Geographic = require('../../rdnaptrans').Geographic;
+const Cartesian = require('../../rdnaptrans').Cartesian;
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');

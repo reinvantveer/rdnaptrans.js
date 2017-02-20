@@ -7,20 +7,28 @@ https://www.kadaster.nl/web/Themas/Registraties/Rijksdriehoeksmeting/Transformat
 Compatible with Node.js back end and browser front end.
 
 # Install:
-## Node.js
+## Node.js v6+
 * clone the repo
 * run `npm install`
 
+## Node.js pre-v6
+You can use the precompiled ES5 version in `./dist`. Or you can compile with `npm run build`.
+
 ## Browser
-As under the Node.js install section
+### As is
+As under the Node.js install section, install with `npm install`. For your convenience, there is a pre-compiled version of rdnaptrans.js in `./dist`. Copy the files to your browser project, they have been transpiled to ES5. Or you can build it yourself with `npm run build`.
+
+### With some kind of bundler/packer/whatever
+You can require the rdnaptrans.js in the root of the project, it is in ES6.
 
 # Usage:
-Due to the rather youthful nature of the port, the implementation is still very close to the original Java version. Therefore, you need a few helping classes to convert from RD or ETRS89:
+## Node.js
+Due to the port, the implementation is still very close to the original Java version. Therefore, you need a few helping classes to convert from RD or ETRS89:
 
 ```js
-const Transform = require('../index').Transform;
-const Geographic = require('../index').Geographic;
-const Cartesian = require('../index').Cartesian;
+const Transform = require('rdnaptrans').Transform;
+const Geographic = require('rdnaptrans').Geographic;
+const Cartesian = require('rdnaptrans').Cartesian;
 
 const texelRD = new Cartesian(117380.1200, 575040.3400, 1.0000);
 Transform.rdnap2etrs(texelRD)

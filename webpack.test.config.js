@@ -7,7 +7,7 @@
 module.exports = {
   entry: [
     'babel-polyfill',
-    './index.js',
+    './rdnaptrans.js',
     './test/server/indexTest.js',
     './test/server/lib/GrdFileTest.js'
   ],

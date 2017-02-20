@@ -46,13 +46,19 @@ class GrdFile {
    **--------------------------------------------------------------
    */
   /** Constant <code>GRID_FILE_DX</code> */
-  static GRID_FILE_DX() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/x2c.grd')); }
+  static GRID_FILE_DX() {
+    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/x2c.grd'));
+  }
 
   /** Constant <code>GRID_FILE_DY</code> */
-  static GRID_FILE_DY() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/y2c.grd')); }
+  static GRID_FILE_DY() {
+    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/y2c.grd'));
+  }
 
   /** Constant <code>GRID_FILE_GEOID</code> */
-  static GRID_FILE_GEOID() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/nlgeo04.grd')); }
+  static GRID_FILE_GEOID() {
+    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/nlgeo04.grd'));
+  }
 
   /**
    * <p>Constructor for GrdFile.</p>
@@ -86,8 +92,8 @@ class GrdFile {
            */
 
           if (idString !== 'DSBB') {
-            console.error(idString);
-            return reject(new Error(`${src} is not a valid grd file`));
+            return reject(new Error(`${src} is not a valid grd file.
+            \n Expected first four chars of file to be 'DSBB', but found ${idString}`));
           }
 
           this.grdInner = data;

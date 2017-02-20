@@ -5,3 +5,7 @@ const Cartesian = require('./src/lib/Cartesian');
 const Transform = require('./src/Transform');
 
 module.exports = { Geographic, Cartesian, Transform };
+
+if (typeof window === 'object') {
+  window.rdnaptrans = module.exports;
+}
