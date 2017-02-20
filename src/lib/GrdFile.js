@@ -4,7 +4,18 @@
 
 'use strict';
 
-const path = require('path');
+// Default node.js location
+let location = './dist/';
+
+if (typeof window === 'object') {
+  const scripts = document.getElementsByTagName('script');
+  location = scripts[scripts.length - 1]
+    .src
+    .split('/')
+    .slice(0, -1)
+    .join('/') + '/';
+}
+
 const binary = require('bops');
 const xtend = require('xtend');
 const Constants = require('./Constants');
@@ -46,18 +57,19 @@ class GrdFile {
    **--------------------------------------------------------------
    */
   /** Constant <code>GRID_FILE_DX</code> */
+
   static GRID_FILE_DX() {
-    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/x2c.grd'));
+    return new GrdFile(location + 'resources/rdnaptrans/x2c.grd');
   }
 
   /** Constant <code>GRID_FILE_DY</code> */
   static GRID_FILE_DY() {
-    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/y2c.grd'));
+    return new GrdFile(location + 'resources/rdnaptrans/y2c.grd');
   }
 
   /** Constant <code>GRID_FILE_GEOID</code> */
   static GRID_FILE_GEOID() {
-    return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/nlgeo04.grd'));
+    return new GrdFile(location + 'resources/rdnaptrans/nlgeo04.grd');
   }
 
   /**
