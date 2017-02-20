@@ -8,20 +8,20 @@ module.exports = (config) => {
   config.set({
     frameworks: ['mocha'],
     proxies: {
-      '/test/resources/': '/base/test/resources/',
-      '/resources/rdnaptrans/': '/base/test/resources/rdnaptrans/'
+      '/test/resources/': '/base/test/browser/resources/',
+      '/src/lib/resources': '/base/test/browser/resources/'
     },
     files: [
       'test/browser/*.js',
       {
-        pattern: 'test/resources/nogrid.txt',
+        pattern: 'test/browser/resources/nogrid.txt',
         watched: false,
         included: false,
         served: true,
         nocache: false
       },
       {
-        pattern: 'test/resources/rdnaptrans/*',
+        pattern: 'test/browser/resources/rdnaptrans/*',
         watched: false,
         included: false,
         served: true,

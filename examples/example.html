@@ -6,6 +6,10 @@
     <script src="../../dist/rdnaptrans.js"></script>
 </head>
 <body>
-
+<script>
+  var texelRD = new rdnaptrans.Cartesian(117380.1200, 575040.3400, 1.0000);
+  rdnaptrans.Transform.rdnap2etrs(texelRD)
+    .then(texelETRS => console.log(texelETRS));
+</script>
 </body>
 </html>

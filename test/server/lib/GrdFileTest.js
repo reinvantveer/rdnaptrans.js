@@ -19,24 +19,22 @@ describe('GrdFile', () => {
   });
 
   it('reads the x offset grid file header', () => {
-    const grdFile = new GrdFile('./test/resources/rdnaptrans/x2c.grd');
-    return grdFile.then(data => {
-      return data.header.should.deep.equal({
-        sizeX: 310,
-        sizeY: 343,
-        minX: -8000.0,
-        maxX: 301000.0,
-        minY: 288000.0,
-        maxY: 630000.0,
-        minValue: -0.17173554003238678,
-        maxValue: 0.22832782566547394,
-        stepSizeX: 1000.0,
-        stepSizeY: 1000.0,
-        safeMinX: -7000.0,
-        safeMaxX: 300000.0,
-        safeMinY: 289000.0,
-        safeMaxY: 629000.0
-      });
-    });
+    const grdFile = new GrdFile('./src/lib/resources/rdnaptrans/x2c.grd');
+    return grdFile.then(data => data.header.should.deep.equal({
+      sizeX: 310,
+      sizeY: 343,
+      minX: -8000.0,
+      maxX: 301000.0,
+      minY: 288000.0,
+      maxY: 630000.0,
+      minValue: -0.17173554003238678,
+      maxValue: 0.22832782566547394,
+      stepSizeX: 1000.0,
+      stepSizeY: 1000.0,
+      safeMinX: -7000.0,
+      safeMaxX: 300000.0,
+      safeMinY: 289000.0,
+      safeMaxY: 629000.0
+    }));
   });
 });
