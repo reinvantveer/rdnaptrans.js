@@ -5,8 +5,7 @@
 
 'use strict';
 
-const path = require('path');
-const GrdFile = require('../../src/lib/GrdFile');
+const GrdFile = require('../../../src/lib/GrdFile');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
@@ -15,12 +14,12 @@ chai.should();
 
 describe('GrdFile', () => {
   it('rejects a file that is not a valid grid file', () => {
-    const grdFile = new GrdFile(path.join(__dirname, '/resources/nogrid.txt'));
+    const grdFile = new GrdFile('./test/resources/nogrid.txt');
     return grdFile.should.be.rejectedWith(Error, 'not a valid grd file');
   });
 
   it('reads the x offset grid file header', () => {
-    const grdFile = new GrdFile(path.join(__dirname, '/../../src/resources/rdnaptrans/x2c.grd'));
+    const grdFile = new GrdFile('./src/lib/resources/rdnaptrans/x2c.grd');
     return grdFile.then(data => data.header.should.deep.equal({
       sizeX: 310,
       sizeY: 343,

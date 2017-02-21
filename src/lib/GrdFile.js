@@ -4,7 +4,19 @@
 
 'use strict';
 
-const path = require('path');
+// Default node.js location
+let location = './dist/';
+
+if (typeof window === 'object') {
+  const scripts = document.getElementsByTagName('script');
+  location = scripts[scripts.length - 1]
+    .src
+    .split('/')
+    .slice(0, -1)
+    .join('/') + '/';
+}
+
+const binary = require('bops');
 const xtend = require('xtend');
 const Constants = require('./Constants');
 const Reader = require('./Reader');
@@ -45,13 +57,20 @@ class GrdFile {
    **--------------------------------------------------------------
    */
   /** Constant <code>GRID_FILE_DX</code> */
-  static GRID_FILE_DX() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/x2c.grd')); }
+
+  static GRID_FILE_DX() {
+    return new GrdFile(location + 'resources/rdnaptrans/x2c.grd');
+  }
 
   /** Constant <code>GRID_FILE_DY</code> */
-  static GRID_FILE_DY() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/y2c.grd')); }
+  static GRID_FILE_DY() {
+    return new GrdFile(location + 'resources/rdnaptrans/y2c.grd');
+  }
 
   /** Constant <code>GRID_FILE_GEOID</code> */
-  static GRID_FILE_GEOID() { return new GrdFile(path.join(__dirname, '../resources/rdnaptrans/nlgeo04.grd')); }
+  static GRID_FILE_GEOID() {
+    return new GrdFile(location + 'resources/rdnaptrans/nlgeo04.grd');
+  }
 
   /**
    * <p>Constructor for GrdFile.</p>
@@ -75,8 +94,7 @@ class GrdFile {
            **    Read file id
            **--------------------------------------------------------------
            */
-          const idString = data.slice(cursor, cursor + 4)
-            .toString();
+          const idString = binary.to(data.slice(cursor, cursor + 4));
           cursor += 4;
 
           /**
@@ -86,7 +104,8 @@ class GrdFile {
            */
 
           if (idString !== 'DSBB') {
-            return reject(new Error(`${src} is not a valid grd file`));
+            return reject(new Error(`${src} is not a valid grd file.
+            \n Expected first four chars of file to be 'DSBB', but found ${idString}`));
           }
 
           this.grdInner = data;
@@ -316,21 +335,21 @@ class GrdFile {
      **--------------------------------------------------------------
      */
 
-    const sizeX = input.readUInt16LE(cursor);
+    const sizeX = Reader.readShort(input, cursor);
     cursor += 2;
-    const sizeY = input.readUInt16LE(cursor);
+    const sizeY = Reader.readShort(input, cursor);
     cursor += 2;
-    const minX = input.readDoubleLE(cursor);
+    const minX = Reader.readDouble(input, cursor);
     cursor += 8;
-    const maxX = input.readDoubleLE(cursor);
+    const maxX = Reader.readDouble(input, cursor);
     cursor += 8;
-    const minY = input.readDoubleLE(cursor);
+    const minY = Reader.readDouble(input, cursor);
     cursor += 8;
-    const maxY = input.readDoubleLE(cursor);
+    const maxY = Reader.readDouble(input, cursor);
     cursor += 8;
-    const minValue = input.readDoubleLE(cursor);
+    const minValue = Reader.readDouble(input, cursor);
     cursor += 8;
-    const maxValue = input.readDoubleLE(cursor);
+    const maxValue = Reader.readDouble(input, cursor);
 
     return { sizeX, sizeY, minX, maxX, minY, maxY, minValue, maxValue };
   }
@@ -373,22 +392,7 @@ class GrdFile {
 
     const b = this.grdInner.slice(start, end);
 
-    try {
-      return b.readFloatLE(b);
-    } catch (err) {
-      console.error(err.stack);
-    }
-  }
-
-  /**
-   * Will implement the calculations that are
-   * to be remembered thanks to this class
-   * (one calculation per distinct parameter)
-   * @param p Calc V for p
-   * @return v based on p
-   */
-  calc(recordNumber) {
-    return this.readGrdFileBody(recordNumber);
+    return binary.readFloatLE(b);
   }
 }
 
