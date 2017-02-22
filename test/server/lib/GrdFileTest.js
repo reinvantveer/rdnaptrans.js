@@ -13,14 +13,19 @@ chai.use(chaiAsPromised);
 chai.should();
 
 describe('GrdFile', () => {
+  it('verifies the grid files data presence', () => {
+    const grdFileDx = GrdFile.GRID_FILE_DX();
+    grdFileDx.grdInner.length.should.deep.equal(425376);
+  });
+
   it('rejects a file that is not a valid grid file', () => {
-    const grdFile = new GrdFile('./test/resources/nogrid.txt');
-    return grdFile.should.be.rejectedWith(Error, 'not a valid grd file');
+    (() => { new GrdFile('./test/resources/nogrid.txt'); })
+      .should.throw(Error, 'not a valid grd file');
   });
 
   it('reads the x offset grid file header', () => {
     const grdFile = new GrdFile('./src/lib/resources/rdnaptrans/x2c.grd');
-    return grdFile.then(data => data.header.should.deep.equal({
+    return grdFile.header.should.deep.equal({
       sizeX: 310,
       sizeY: 343,
       minX: -8000.0,
@@ -35,6 +40,6 @@ describe('GrdFile', () => {
       safeMaxX: 300000.0,
       safeMinY: 289000.0,
       safeMaxY: 629000.0
-    }));
+    });
   });
 });

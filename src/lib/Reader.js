@@ -5,6 +5,7 @@
 'use strict';
 
 const binary = require('bops');
+const Promise = require('bluebird');
 
 class Reader {
   /**
@@ -24,16 +25,19 @@ class Reader {
       /* eslint global-require: 0 */
       const fs = require('fs');
       this.read = function (filePath) {
-        return new Promise((resolve, reject) => {
-          fs.readFile(filePath, (err, buffer) => {
-            if (err) return reject(err);
-            return resolve(binary.from(buffer));
-          });
-        });
+        let buffer;
+        try {
+          buffer = fs.readFileSync(filePath);
+          return binary.from(buffer);
+        } catch (err) {
+          throw err;
+        }
       };
     } else {
-      this.read = function (filePath) {
+      this.read = function (url) {
         return new Promise((resolve, reject) => {
+
+/*
           try {
             const xhrReq = new XMLHttpRequest();
             xhrReq.open('GET', filePath);
@@ -59,6 +63,7 @@ class Reader {
           } catch (err) {
             reject(err);
           }
+*/
         });
       };
     }

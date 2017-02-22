@@ -5752,7 +5752,7 @@ var binary = __webpack_require__(89);
 var Reader = function () {
   /**
    * Constructor
-   * The read() function on the reader class is instantiated as a polymorphic Promise,
+   * The read() function on the read class is instantiated as a polymorphic Promise,
    * able to read either from a local file system (Node.js)
    * or from a location served over http (browser). This
    * allows the rdnaptrans module to be used in either environment,

@@ -111,11 +111,9 @@ class Transform {
       constants.INV_F_BESSEL
     );
 
-    return co(function* () {
-      const pseudoRD = Helpers.rdProjection(geographicBessel);
-      const corrected = yield Helpers.rdCorrection(pseudoRD);
-      return corrected.withZ(geographicBessel.h);
-    });
+    const pseudoRD = Helpers.rdProjection(geographicBessel);
+    const corrected = Helpers.rdCorrection(pseudoRD);
+    return corrected.withZ(geographicBessel.h);
   }
 
 /**
@@ -177,60 +175,59 @@ class Transform {
    **    Convert RD coordinates to ETRS89 coordinates
    **--------------------------------------------------------------
    */
-    return co(function* () {
-      const pseudoRD = yield Helpers.invRdCorrection(rd);
-      const etrsBessel = Helpers.invRdProjection(pseudoRD);
-      const cartesianBessel = Helpers.geographic2cartesian(
-        etrsBessel.withH(hBessel),
-        constants.A_BESSEL,
-        constants.INV_F_BESSEL
-      );
-      const cartesianETRS = Helpers.simTrans(
-        cartesianBessel,
-        new Cartesian(constants.TX_BESSEL_ETRS, constants.TY_BESSEL_ETRS, constants.TZ_BESSEL_ETRS),
-        constants.ALPHA_BESSEL_ETRS, constants.BETA_BESSEL_ETRS, constants.GAMMA_BESSEL_ETRS,
-        constants.DELTA_BESSEL_ETRS,
-        amersfoortBessel
-      );
+    const pseudoRD = Helpers.invRdCorrection(rd);
+    const etrsBessel = Helpers.invRdProjection(pseudoRD);
+    const cartesianBessel = Helpers.geographic2cartesian(
+      etrsBessel.withH(hBessel),
+      constants.A_BESSEL,
+      constants.INV_F_BESSEL
+    );
 
-      return Helpers.cartesian2geographic(cartesianETRS,
-        constants.A_ETRS, constants.INV_F_ETRS);
-    });
+    const cartesianETRS = Helpers.simTrans(
+      cartesianBessel,
+      new Cartesian(constants.TX_BESSEL_ETRS, constants.TY_BESSEL_ETRS, constants.TZ_BESSEL_ETRS),
+      constants.ALPHA_BESSEL_ETRS, constants.BETA_BESSEL_ETRS, constants.GAMMA_BESSEL_ETRS,
+      constants.DELTA_BESSEL_ETRS,
+      amersfoortBessel
+    );
+
+    return Helpers.cartesian2geographic(cartesianETRS,
+      constants.A_ETRS, constants.INV_F_ETRS);
+
+    /**
+     **--------------------------------------------------------------
+     **    To convert to degrees, minutes and seconds use the function decimal2deg_min_sec() here
+     **--------------------------------------------------------------
+     */
+  }
 
   /**
    **--------------------------------------------------------------
-   **    To convert to degrees, minutes and seconds use the function decimal2deg_min_sec() here
+   **    Function name: etrs2nap
+   **    Description:   convert ellipsoidal ETRS89 height to NAP height
+   **
+   **    Parameter      Type        In/Out Req/Opt Default
+   **    phi            double      in     req     none
+   **    lambda         double      in     req     none
+   **    h              double      in     req     none
+   **    nap            double      out    -       none
+   **
+   **    Additional explanation of the meaning of parameters
+   **    phi, lambda, h  input ETRS89 coordinates
+   **    nap             output NAP height
+   **
+   **    Return value: (besides the standard return values) none
+   **    on error (outside geoid grid) nap is not compted here
+   **    instead in etrs2rdnap nap=h_bessel
    **--------------------------------------------------------------
    */
-  }
-
-/**
- **--------------------------------------------------------------
- **    Function name: etrs2nap
- **    Description:   convert ellipsoidal ETRS89 height to NAP height
- **
- **    Parameter      Type        In/Out Req/Opt Default
- **    phi            double      in     req     none
- **    lambda         double      in     req     none
- **    h              double      in     req     none
- **    nap            double      out    -       none
- **
- **    Additional explanation of the meaning of parameters
- **    phi, lambda, h  input ETRS89 coordinates
- **    nap             output NAP height
- **
- **    Return value: (besides the standard return values) none
- **    on error (outside geoid grid) nap is not compted here
- **    instead in etrs2rdnap nap=h_bessel
- **--------------------------------------------------------------
- */
-/**
- * <p>etrs2nap.</p>
- *
- * @param etrs a {@link rdnaptrans.value.Geographic} object.
- * @return a {@link rdnaptrans.value.OptionalDouble} object.
- * @throws java.io.IOException if any.
- */
+  /**
+   * <p>etrs2nap.</p>
+   *
+   * @param etrs a {@link rdnaptrans.value.Geographic} object.
+   * @return a {@link rdnaptrans.value.OptionalDouble} object.
+   * @throws java.io.IOException if any.
+   */
   static etrs2nap(etrs) {
   /**
    **--------------------------------------------------------------
@@ -240,12 +237,9 @@ class Transform {
    **    instead in etrs2rdnap nap=h_bessel
    **--------------------------------------------------------------
    */
-
-    return co(function* interpolate() {
-      const grdFileZ = yield GrdFile.GRID_FILE_GEOID();
-      const n = grdFileZ.gridInterpolation(etrs.lambda, etrs.phi);
-      return n ? etrs.h - n + 0.0088 : null;
-    });
+    const grdFileZ = GrdFile.GRID_FILE_GEOID();
+    const n = grdFileZ.gridInterpolation(etrs.lambda, etrs.phi);
+    return n ? etrs.h - n + 0.0088 : null;
   }
 
 /**
@@ -286,11 +280,9 @@ class Transform {
    **        n  geoid height
    **--------------------------------------------------------------
    */
-    return co(function* interpolate() {
-      const grdFileZ = yield GrdFile.GRID_FILE_GEOID();
-      const n = grdFileZ.gridInterpolation(lambda, phi);
-      return n ? nap + n - 0.0088 : null;
-    });
+    const grdFileZ = GrdFile.GRID_FILE_GEOID();
+    const n = grdFileZ.gridInterpolation(lambda, phi);
+    return n ? nap + n - 0.0088 : null;
   }
 
 /**
@@ -322,11 +314,9 @@ class Transform {
  * @throws java.io.IOException if any.
  */
   static etrs2rdnap(etrs) {
-    return co(function* () {
-      const rd = yield Transform.etrs2rd(etrs);
-      const betterH = yield Transform.etrs2nap(etrs);
-      return betterH ? rd.withZ(betterH) : rd;
-    });
+    const rd = Transform.etrs2rd(etrs);
+    const betterH = Transform.etrs2nap(etrs);
+    return betterH ? rd.withZ(betterH) : rd;
   }
 
 /**
@@ -358,11 +348,9 @@ class Transform {
  * @throws java.io.IOException if any.
  */
   static rdnap2etrs(rdnap) {
-    return co(function* () {
-      const etrs = yield Transform.rd2etrs(rdnap);
-      const betterH = yield Transform.nap2etrs(etrs.phi, etrs.lambda, rdnap.Z);
-      return betterH ? etrs.withH(betterH) : etrs;
-    });
+    const etrs = Transform.rd2etrs(rdnap);
+    const betterH = Transform.nap2etrs(etrs.phi, etrs.lambda, rdnap.Z);
+    return betterH ? etrs.withH(betterH) : etrs;
   }
 
 /**

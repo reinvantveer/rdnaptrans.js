@@ -4,6 +4,9 @@
 
 'use strict';
 
+const Reader = require('./Reader');
+const reader = new Reader();
+
 // Default node.js location
 let location = './dist/';
 
@@ -19,7 +22,6 @@ if (typeof window === 'object') {
 const binary = require('bops');
 const xtend = require('xtend');
 const Constants = require('./Constants');
-const Reader = require('./Reader');
 
 const constants = new Constants();
 const floor = Math.floor;
@@ -75,7 +77,7 @@ class GrdFile {
   /**
    * <p>Constructor for GrdFile.</p>
    *
-   * @param src a {@link java.net.URL} object.
+   * @param sourceFile a {@link java.net.URL} object.
    */
   constructor(src) {
     /**
@@ -83,46 +85,40 @@ class GrdFile {
      **    Grd files are binary grid files in the format of the program Surfer(R)
      **--------------------------------------------------------------
      */
-
-    const reader = new Reader(src);
     let cursor = 0;
 
-    return new Promise((resolve, reject) => reader.read(src)
-        .then((data) => {
-          /**
-           **--------------------------------------------------------------
-           **    Read file id
-           **--------------------------------------------------------------
-           */
-          const idString = binary.to(data.slice(cursor, cursor + 4));
-          cursor += 4;
+    const data = reader.read(src);
+    if (!data) throw new Error(`Unable to read source ${src}`);
 
-          /**
-           **--------------------------------------------------------------
-           **    Checks
-           **--------------------------------------------------------------
-           */
+    // Read file id
+    const idString = binary.to(data.slice(cursor, cursor + 4));
+    cursor += 4;
 
-          if (idString !== 'DSBB') {
-            return reject(new Error(`${src} is not a valid grd file.
-            \n Expected first four chars of file to be 'DSBB', but found ${idString}`));
-          }
+    /**
+     **--------------------------------------------------------------
+     **    Checks
+     **--------------------------------------------------------------
+     */
 
-          this.grdInner = data;
-          this.header = this.readGrdFileHeader(data, cursor);
-          this.header = xtend(this.header, {
-            stepSizeX: (this.header.maxX - this.header.minX) / (this.header.sizeX - 1),
-            stepSizeY: (this.header.maxY - this.header.minY) / (this.header.sizeY - 1)
-          });
-          this.header = xtend(this.header, {
-            safeMinX: this.header.minX + this.header.stepSizeX,
-            safeMaxX: this.header.maxX - this.header.stepSizeX,
-            safeMinY: this.header.minY + this.header.stepSizeY,
-            safeMaxY: this.header.maxY - this.header.stepSizeY
-          });
-          return resolve(this);
-        })
-        .catch(reject));
+    if (idString !== 'DSBB') {
+      throw new Error(`${src} is not a valid grd file.
+      \n Expected first four chars of file to be 'DSBB', but found ${idString}`);
+    }
+
+    this.grdInner = data;
+    this.header = this.readGrdFileHeader(data, cursor);
+    this.header = xtend(this.header, {
+      stepSizeX: (this.header.maxX - this.header.minX) / (this.header.sizeX - 1),
+      stepSizeY: (this.header.maxY - this.header.minY) / (this.header.sizeY - 1)
+    });
+    this.header = xtend(this.header, {
+      safeMinX: this.header.minX + this.header.stepSizeX,
+      safeMaxX: this.header.maxX - this.header.stepSizeX,
+      safeMinY: this.header.minY + this.header.stepSizeY,
+      safeMaxY: this.header.maxY - this.header.stepSizeY
+    });
+
+    return this;
   }
 
   /**
