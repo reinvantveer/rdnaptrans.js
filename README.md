@@ -8,12 +8,10 @@ For Node.js back end and (future!) browser front end. The JS implementation devi
 
 
 # Install:
-## Node.js v6+
+## Node.js
 * clone the repo
 * run `npm install`
-
-## Node.js pre-v6
-You can use the precompiled ES5 version in `./dist`. Or you can compile with `npm run build`.
+* see implementation instructions below
 
 ## Browser
 Browser implementation is not supported at the moment.
