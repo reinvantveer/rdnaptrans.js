@@ -10,6 +10,8 @@ const Cartesian = require('./lib/Cartesian');
 const Geographic = require('./lib/Geographic');
 const GrdFile = require('./lib/GrdFile');
 
+const grdFileZ = GrdFile.GRID_FILE_GEOID();
+
 const constants = new Constants();
 
 /**
@@ -237,7 +239,6 @@ class Transform {
    **    instead in etrs2rdnap nap=h_bessel
    **--------------------------------------------------------------
    */
-    const grdFileZ = GrdFile.GRID_FILE_GEOID();
     const n = grdFileZ.gridInterpolation(etrs.lambda, etrs.phi);
     return n ? etrs.h - n + 0.0088 : null;
   }
@@ -280,7 +281,6 @@ class Transform {
    **        n  geoid height
    **--------------------------------------------------------------
    */
-    const grdFileZ = GrdFile.GRID_FILE_GEOID();
     const n = grdFileZ.gridInterpolation(lambda, phi);
     return n ? nap + n - 0.0088 : null;
   }

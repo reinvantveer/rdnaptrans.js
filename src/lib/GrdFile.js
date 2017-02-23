@@ -88,7 +88,7 @@ class GrdFile {
     let cursor = 0;
 
     const data = reader.read(src);
-    if (!data) throw new Error(`Unable to read source ${src}`);
+    if (!data) throw new Error(`Unable to read empty source ${src}`);
 
     // Read file id
     const idString = binary.to(data.slice(cursor, cursor + 4));
