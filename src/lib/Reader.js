@@ -87,6 +87,7 @@ class Reader {
         }
       };
     } else {
+      throw new Error('Browser implementation is not supported');
       setTransport();
       this.read = function (url) {
         let data;
