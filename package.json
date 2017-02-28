@@ -2,7 +2,7 @@
   "name": "rdnaptrans.js",
   "version": "0.2.0",
   "description": "JavaScript implementation of RDNAPTRANS, for the projection of RD geometries (EPSG:28992) to ETRS89 (EPSG:4258) and vice versa",
-  "main": "index.js",
+  "main": "rdnaptrans.js",
   "scripts": {
     "build": "./node_modules/.bin/grunt webpack:transpile",
     "build-test": "./node_modules/.bin/webpack --config ./webpack.test.config.js",
