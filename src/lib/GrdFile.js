@@ -17,6 +17,8 @@ if (typeof window === 'object') {
     .split('/')
     .slice(0, -1)
     .join('/') + '/';
+} else {
+  location = __dirname + '/';
 }
 
 const binary = require('bops');
