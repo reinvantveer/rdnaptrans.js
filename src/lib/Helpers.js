@@ -30,6 +30,9 @@ const log = Math.log;
 
 const constants = new Constants();
 
+const gridDX = GrdFile.GRID_FILE_DX();
+const gridDY = GrdFile.GRID_FILE_DY();
+
 /**
  * <p>Helpers class.</p>
  *
@@ -611,13 +614,9 @@ class Helpers {
   }
 
   static rdCorrection(pseudo) {
-    return co(function* () {
-      const gridDX = yield GrdFile.GRID_FILE_DX();
-      const gridDY = yield GrdFile.GRID_FILE_DY();
-      const dx = gridDX.gridInterpolation(pseudo.X, pseudo.Y);
-      const dy = gridDY.gridInterpolation(pseudo.X, pseudo.Y);
-      return new Cartesian(pseudo.X - dx, pseudo.Y - dy, pseudo.Z);
-    });
+    const dx = gridDX.gridInterpolation(pseudo.X, pseudo.Y);
+    const dy = gridDY.gridInterpolation(pseudo.X, pseudo.Y);
+    return new Cartesian(pseudo.X - dx, pseudo.Y - dy, pseudo.Z);
   }
 
   /**
@@ -647,14 +646,9 @@ class Helpers {
      **    The intoduced error is certainly smaller than 0.0001 m for the X2c.grd and Y2c.grd.
      **--------------------------------------------------------------
      */
-    return co(function* () {
-      const gridDX = yield GrdFile.GRID_FILE_DX();
-      const gridDY = yield GrdFile.GRID_FILE_DY();
-
-      const dx = gridDX.gridInterpolation(rd.X, rd.Y);
-      const dy = gridDY.gridInterpolation(rd.X, rd.Y);
-      return new Cartesian(rd.X + dx, rd.Y + dy, rd.Z);
-    });
+    const dx = gridDX.gridInterpolation(rd.X, rd.Y);
+    const dy = gridDY.gridInterpolation(rd.X, rd.Y);
+    return new Cartesian(rd.X + dx, rd.Y + dy, rd.Z);
   }
 }
 

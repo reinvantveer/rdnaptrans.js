@@ -5,6 +5,59 @@
 'use strict';
 
 const binary = require('bops');
+const $ = require('jquery');
+
+function setTransport() {
+  $.ajaxTransport("+binary", function(options, originalOptions, jqXHR){
+    // check for conditions and support for blob / arraybuffer response type
+    if (
+      window.FormData
+      && (
+        (options.dataType && (options.dataType == 'binary'))
+        || (options.data
+          && ((window.ArrayBuffer && options.data instanceof ArrayBuffer)
+            || (window.Blob && options.data instanceof Blob)
+          )
+        )
+      )
+    ) {
+      return {
+        // create new XMLHttpRequest
+        send: (headers, callback) => {
+          // setup all variables
+          const xhr = new XMLHttpRequest();
+          const url = options.url;
+          const type = options.type;
+          const async = options.async && true;
+          console.log({ async });
+          // blob or arraybuffer. Default is blob
+          const dataType = options.responseType || 'blob';
+          const data = options.data || null;
+          const username = options.username || null;
+          const password = options.password || null;
+
+          xhr.addEventListener('load', () => {
+            let data = {};
+            data[options.dataType] = xhr.response;
+            // make callback and send data
+            callback(xhr.status, xhr.statusText, data, xhr.getAllResponseHeaders());
+          });
+
+          xhr.open(type, url, async, username, password);
+
+          // setup custom headers
+          for (var i in headers ) {
+            xhr.setRequestHeader(i, headers[i]);
+          }
+
+          xhr.responseType = dataType;
+          xhr.send(data);
+        },
+        abort: () => jqXHR.abort()
+      };
+    }
+  });
+}
 
 class Reader {
   /**
@@ -24,42 +77,33 @@ class Reader {
       /* eslint global-require: 0 */
       const fs = require('fs');
       this.read = function (filePath) {
-        return new Promise((resolve, reject) => {
-          fs.readFile(filePath, (err, buffer) => {
-            if (err) return reject(err);
-            return resolve(binary.from(buffer));
-          });
-        });
+        let buffer;
+        try {
+          buffer = fs.readFileSync(filePath);
+          console.log(`reading ${filePath}`);
+          return binary.from(buffer);
+        } catch (err) {
+          throw err;
+        }
       };
     } else {
-      this.read = function (filePath) {
-        return new Promise((resolve, reject) => {
-          try {
-            const xhrReq = new XMLHttpRequest();
-            xhrReq.open('GET', filePath);
-            xhrReq.responseType = 'arraybuffer';
-            xhrReq.send();
-            xhrReq.onreadystatechange = () => {
-              if (xhrReq.readyState === XMLHttpRequest.DONE && xhrReq.status === 200) {
-
-                if (xhrReq.response === 'NOT FOUND') {
-                  return reject(new Error(`Resource ${filePath} not found`));
-                }
-
-                const buffer = xhrReq.response;
-                const dataview = new DataView(buffer);
-                const ints = new Uint8Array(buffer.byteLength);
-
-                for (let i = 0; i < ints.length; i++) {
-                  ints[i] = dataview.getUint8(i);
-                }
-                return resolve(ints);
-              }
-            };
-          } catch (err) {
-            reject(err);
-          }
+      throw new Error('Browser implementation is not supported');
+      setTransport();
+      this.read = function (url) {
+        let data;
+        const call = $.ajax({
+          url,
+          type: 'GET',
+          dataType: 'binary',
+          responseType: 'arraybuffer',
+          processData: false,
+          async: false,
         });
+
+        //console.log('state:', call.readyState);
+        //console.log(call.readyState);
+        //console.log(data);
+        return data;
       };
     }
   }
