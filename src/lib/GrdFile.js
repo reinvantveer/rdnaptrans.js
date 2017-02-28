@@ -8,7 +8,7 @@ const Reader = require('./Reader');
 const reader = new Reader();
 
 // Default node.js location
-let location = './dist/';
+let location;
 
 if (typeof window === 'object') {
   const scripts = document.getElementsByTagName('script');
