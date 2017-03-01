@@ -5,6 +5,7 @@
 'use strict';
 
 const Reader = require('./Reader');
+
 const reader = new Reader();
 
 // Default node.js location
@@ -21,7 +22,6 @@ if (typeof window === 'object') {
   location = __dirname + '/';
 }
 
-const binary = require('bops');
 const xtend = require('xtend');
 const Constants = require('./Constants');
 
@@ -93,7 +93,7 @@ class GrdFile {
     if (!data) throw new Error(`Unable to read empty source ${src}`);
 
     // Read file id
-    const idString = binary.to(data.slice(cursor, cursor + 4));
+    const idString = data.slice(cursor, cursor + 4);
     cursor += 4;
 
     /**
@@ -102,7 +102,7 @@ class GrdFile {
      **--------------------------------------------------------------
      */
 
-    if (idString !== 'DSBB') {
+    if (idString.toString() !== 'DSBB') {
       throw new Error(`${src} is not a valid grd file.
       \n Expected first four chars of file to be 'DSBB', but found ${idString}`);
     }
@@ -390,7 +390,7 @@ class GrdFile {
 
     const b = this.grdInner.slice(start, end);
 
-    return binary.readFloatLE(b);
+    return b.readFloatLE();
   }
 }
 
