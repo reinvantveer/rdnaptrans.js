@@ -27,19 +27,13 @@ class Reader {
    * @param src a file or url path string
    */
   static read(grdFile) {
-    const node = typeof window !== 'object';
-
-    if (node) { // The browser has a window object, but Node.js does not
-      let buffer;
-      try {
-        buffer = gridFiles[grdFile];
-        if (!buffer) throw new Error(`${grdFile} is not a valid grd file.`);
-        return buffer;
-      } catch (err) {
-        throw err;
-      }
-    } else {
-      throw new Error('Browser implementation is not supported');
+    let buffer;
+    try {
+      buffer = gridFiles[grdFile];
+      if (!buffer) throw new Error(`${grdFile} is not a valid grd file.`);
+      return buffer;
+    } catch (err) {
+      throw err;
     }
   }
 
