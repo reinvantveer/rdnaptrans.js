@@ -23,7 +23,7 @@ describe('GrdFile', () => {
   });
 
   it('reads the x offset grid file header', () => {
-    const grdFile = new GrdFile('./src/lib/resources/rdnaptrans/x2c.grd');
+    const grdFile = new GrdFile('x2c.grd');
     return grdFile.header.should.deep.equal({
       sizeX: 310,
       sizeY: 343,

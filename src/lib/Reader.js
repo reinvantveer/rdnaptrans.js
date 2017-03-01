@@ -6,6 +6,15 @@
 
 const fs = require('fs');
 
+// There's a good reason not to include the path module in the dependencies:
+// It would create another hurdle to overcome in browserifying the package.
+/* eslint no-path-concat: 0 */
+const gridFiles = {
+  'x2c.grd': fs.readFileSync(__dirname + '/resources/rdnaptrans/x2c.grd'),
+  'y2c.grd': fs.readFileSync(__dirname + '/resources/rdnaptrans/y2c.grd'),
+  'nlgeo04.grd': fs.readFileSync(__dirname + '/resources/rdnaptrans/nlgeo04.grd'),
+};
+
 class Reader {
   /**
    * Constructor
@@ -17,19 +26,18 @@ class Reader {
    * available.
    * @param src a file or url path string
    */
-  constructor() {
+  static read(grdFile) {
     const node = typeof window !== 'object';
 
     if (node) { // The browser has a window object, but Node.js does not
-      this.read = function readFile(filePath) {
-        let buffer;
-        try {
-          buffer = fs.readFileSync(filePath);
-          return buffer;
-        } catch (err) {
-          throw err;
-        }
-      };
+      let buffer;
+      try {
+        buffer = gridFiles[grdFile];
+        if (!buffer) throw new Error(`${grdFile} is not a valid grd file.`);
+        return buffer;
+      } catch (err) {
+        throw err;
+      }
     } else {
       throw new Error('Browser implementation is not supported');
     }

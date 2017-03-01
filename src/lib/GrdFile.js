@@ -2,25 +2,11 @@
  * Created by veerr on 8-2-2017.
  */
 
+/* eslint no-mixed-operators: 0 */
+
 'use strict';
 
 const Reader = require('./Reader');
-
-const reader = new Reader();
-
-// Default node.js location
-let location;
-
-if (typeof window === 'object') {
-  const scripts = document.getElementsByTagName('script');
-  location = scripts[scripts.length - 1]
-    .src
-    .split('/')
-    .slice(0, -1)
-    .join('/') + '/';
-} else {
-  location = __dirname + '/';
-}
 
 const xtend = require('xtend');
 const Constants = require('./Constants');
@@ -63,25 +49,25 @@ class GrdFile {
   /** Constant <code>GRID_FILE_DX</code> */
 
   static GRID_FILE_DX() {
-    return new GrdFile(location + 'resources/rdnaptrans/x2c.grd');
+    return new GrdFile('x2c.grd');
   }
 
   /** Constant <code>GRID_FILE_DY</code> */
   static GRID_FILE_DY() {
-    return new GrdFile(location + 'resources/rdnaptrans/y2c.grd');
+    return new GrdFile('y2c.grd');
   }
 
   /** Constant <code>GRID_FILE_GEOID</code> */
   static GRID_FILE_GEOID() {
-    return new GrdFile(location + 'resources/rdnaptrans/nlgeo04.grd');
+    return new GrdFile('nlgeo04.grd');
   }
 
   /**
    * <p>Constructor for GrdFile.</p>
    *
-   * @param sourceFile a {@link java.net.URL} object.
+   * @param grdFileName a {@link java.net.URL} object.
    */
-  constructor(src) {
+  constructor(grdFileName) {
     /**
      **--------------------------------------------------------------
      **    Grd files are binary grid files in the format of the program Surfer(R)
@@ -89,8 +75,8 @@ class GrdFile {
      */
     let cursor = 0;
 
-    const data = reader.read(src);
-    if (!data) throw new Error(`Unable to read empty source ${src}`);
+    const data = Reader.read(grdFileName);
+    if (!data) throw new Error(`Unable to read empty source ${grdFileName}`);
 
     // Read file id
     const idString = data.slice(cursor, cursor + 4);
@@ -103,12 +89,12 @@ class GrdFile {
      */
 
     if (idString.toString() !== 'DSBB') {
-      throw new Error(`${src} is not a valid grd file.
+      throw new Error(`${grdFileName} is not a valid grd file.
       \n Expected first four chars of file to be 'DSBB', but found ${idString}`);
     }
 
     this.grdInner = data;
-    this.header = this.readGrdFileHeader(data, cursor);
+    this.header = GrdFile.readGrdFileHeader(data, cursor);
     this.header = xtend(this.header, {
       stepSizeX: (this.header.maxX - this.header.minX) / (this.header.sizeX - 1),
       stepSizeY: (this.header.maxY - this.header.minY) / (this.header.sizeY - 1)
@@ -326,7 +312,7 @@ class GrdFile {
    **    none
    **--------------------------------------------------------------
    */
-  readGrdFileHeader(input, cursor) {
+  static readGrdFileHeader(input, cursor) {
     /**
      **--------------------------------------------------------------
      **    Read output parameters
