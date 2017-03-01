@@ -4,7 +4,7 @@
 
 'use strict';
 
-const binary = require('bops');
+const fs = require('fs');
 
 class Reader {
   /**
@@ -21,14 +21,11 @@ class Reader {
     const node = typeof window !== 'object';
 
     if (node) { // The browser has a window object, but Node.js does not
-      /* eslint global-require: 0 */
-      const fs = require('fs');
-      this.read = function (filePath) {
+      this.read = function readFile(filePath) {
         let buffer;
         try {
           buffer = fs.readFileSync(filePath);
-          console.log(`reading ${filePath}`);
-          return binary.from(buffer);
+          return buffer;
         } catch (err) {
           throw err;
         }
@@ -39,11 +36,11 @@ class Reader {
   }
 
   static readShort(buffer, offset) {
-    return binary.readUInt16LE(buffer, offset);
+    return buffer.readUInt16LE(offset);
   }
 
   static readDouble(buffer, offset) {
-    return binary.readDoubleLE(buffer, offset);
+    return buffer.readDoubleLE(offset);
   }
 }
 

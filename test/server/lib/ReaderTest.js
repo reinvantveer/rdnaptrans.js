@@ -7,13 +7,12 @@
 'use strict';
 
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
+
+chai.should();
+
 const Reader = require('../../../src/lib/Reader');
 
 const reader = new Reader();
-
-chai.use(chaiAsPromised);
-chai.should();
 
 describe('reader', () => {
   it('reads a the first characters of a grid file', () => {

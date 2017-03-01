@@ -7,9 +7,7 @@
 
 const GrdFile = require('../../../src/lib/GrdFile');
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 
-chai.use(chaiAsPromised);
 chai.should();
 
 describe('GrdFile', () => {
@@ -19,6 +17,7 @@ describe('GrdFile', () => {
   });
 
   it('rejects a file that is not a valid grid file', () => {
+    /* eslint no-new: 0 */
     (() => { new GrdFile('./test/resources/nogrid.txt'); })
       .should.throw(Error, 'not a valid grd file');
   });
