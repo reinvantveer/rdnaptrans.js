@@ -18,7 +18,8 @@ class Cartesian {
    * @param Y a double.
    * @param Z a double.
    */
-  constructor(X, Y, Z = 0) {
+  constructor(X, Y, Z) {
+    if (Z === undefined) Z = 0;
     this.X = X;
     this.Y = Y;
     this.Z = Z;
