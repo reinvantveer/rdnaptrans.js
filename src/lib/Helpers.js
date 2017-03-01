@@ -6,8 +6,6 @@
 
 'use strict';
 
-const co = require('co');
-
 const Angle = require('./Angle');
 const Cartesian = require('./Cartesian');
 const Geographic = require('./Geographic');
