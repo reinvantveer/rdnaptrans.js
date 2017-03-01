@@ -40,7 +40,6 @@ const places = [
     new Cartesian(50000.4500, 335999.6700, 8.0000)]
 ];
 
-console.log(places);
 describe('Transform', () => {
   describe('checks transformations from ETRS 89 to RD', () => places
     .forEach(place =>
