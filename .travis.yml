@@ -1,9 +1,13 @@
 language: node_js
 node_js:
-  - "6"
+  - "4"
 install:
   - npm install
-  - grunt webpack
+  - npm run build
+  - npm run build-test
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
+script:
+  - npm test
+  - npm run test-browser

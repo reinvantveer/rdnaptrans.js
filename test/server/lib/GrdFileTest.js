@@ -7,9 +7,7 @@
 
 const GrdFile = require('../../../src/lib/GrdFile');
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 
-chai.use(chaiAsPromised);
 chai.should();
 
 describe('GrdFile', () => {
@@ -19,12 +17,13 @@ describe('GrdFile', () => {
   });
 
   it('rejects a file that is not a valid grid file', () => {
+    /* eslint no-new: 0 */
     (() => { new GrdFile('./test/resources/nogrid.txt'); })
       .should.throw(Error, 'not a valid grd file');
   });
 
   it('reads the x offset grid file header', () => {
-    const grdFile = new GrdFile('./src/lib/resources/rdnaptrans/x2c.grd');
+    const grdFile = new GrdFile('x2c.grd');
     return grdFile.header.should.deep.equal({
       sizeX: 310,
       sizeY: 343,

@@ -2,7 +2,7 @@
  * Created by veerr on 10-2-2017.
  */
 
-const co = require('co');
+'use strict';
 
 const Helpers = require('./lib/Helpers');
 const Constants = require('./lib/Constants');

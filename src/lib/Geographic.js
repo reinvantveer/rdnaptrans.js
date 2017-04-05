@@ -12,7 +12,7 @@
  */
 class Geographic {
 
-  /*
+  /**
    **    phi      latitude in degrees
    **    lambda   longitude in degrees
    **    h        ellipsoidal height
@@ -25,7 +25,8 @@ class Geographic {
    * @param lambda a double.
    * @param h a double.
    */
-  constructor(phi, lambda = 0, h = 0) {
+  constructor(phi, lambda, h) {
+    if (h === undefined) h = 0;
     this.phi = phi;
     this.lambda = lambda;
     this.h = h;

@@ -10,9 +10,7 @@ const Geographic = require('../../rdnaptrans').Geographic;
 const Cartesian = require('../../rdnaptrans').Cartesian;
 
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 
-chai.use(chaiAsPromised);
 chai.should();
 
 const places = [
